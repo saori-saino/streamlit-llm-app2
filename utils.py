@@ -1,6 +1,44 @@
 # utils.py 
 import constants as ct
 
+#追加
+# 以下を追加
+import os
+from dotenv import load_dotenv
+
+# 環境変数を読み込み
+load_dotenv()
+
+def get_openai_api_key():
+    """
+    OpenAI APIキーを環境変数から取得（Streamlit Cloud対応版）
+    """
+    import streamlit as st
+    
+    # Streamlit Secretsから取得を優先
+    try:
+        api_key = st.secrets["OPENAI_API_KEY"]
+        return api_key
+    except:
+        pass
+    
+    # 環境変数から取得を試行
+    api_key = os.getenv('OPENAI_API_KEY')
+    if api_key:
+        return api_key
+    
+    # ファイルからの読み込みを試行
+    try:
+        with open('openai_api_key.txt', 'r') as f:
+            api_key = f.read().strip()
+            return api_key
+    except FileNotFoundError:
+        pass
+    
+    raise ValueError("OPENAI_API_KEY が見つかりません。Streamlit Cloud Secretsで設定してください。")
+#追加
+
+
 def build_error_message(error_type="初期化処理", additional_info=""):
     """
     エラーメッセージを構築する関数
@@ -54,7 +92,7 @@ def get_llm_response(user_message):
         llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
             temperature=0
-        )
+            )
         
         # RAGチェーンの作成
         qa_chain = RetrievalQA.from_chain_type(
