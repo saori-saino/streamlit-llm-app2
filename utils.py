@@ -87,11 +87,15 @@ def get_llm_response(user_message):
             "k": search_k,
 #            "search_type": search_type
         }
-        
+
+        # APIキーを取得
+        api_key = get_openai_api_key()
+
         # LLMの設定
         llm = ChatOpenAI(
             model_name="gpt-3.5-turbo",
-            temperature=0
+            temperature=0,
+            openai_api_key=api_key
             )
         
         # RAGチェーンの作成
