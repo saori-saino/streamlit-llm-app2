@@ -87,7 +87,7 @@ def display_search_llm_response(llm_response):
         # ページ番号が取得できた場合のみ、ページ番号を表示
         if "page" in llm_response["source_documents"][0].metadata:
             main_page_number = int(llm_response["source_documents"][0].metadata["page"]) 
-            st.success(f"{main_file_path} (ページ: {main_page_number})", icon=icon)
+            st.success(f"{main_file_path} (ページ: {main_page_number + 1})", icon=icon)
         else:
             st.success(f"{main_file_path}", icon=icon)
         
