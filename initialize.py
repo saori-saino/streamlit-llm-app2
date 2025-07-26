@@ -137,7 +137,7 @@ def initialize_retriever():
     # ベクターストアの作成
 #    db = Chroma.from_documents(splitted_docs, embedding=embeddings)
     db = FAISS.from_documents(splitted_docs, embedding=embeddings) #TEST
-
+    
     # ベクターストアを検索するRetrieverの作成
 # 問題2修正 start--------------------------------------------
     st.session_state.retriever = db.as_retriever(search_kwargs={"k": ct.k_num}) 
