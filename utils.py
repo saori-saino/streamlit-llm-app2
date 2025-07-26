@@ -18,6 +18,7 @@ def get_openai_api_key():
     # Streamlit Secretsから取得を最優先
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
+        print("Streamlit SecretsからAPIキーを取得しました。")
         if api_key and len(api_key.strip()) > 0:
             return api_key.strip()
     except Exception:
@@ -26,6 +27,7 @@ def get_openai_api_key():
     # 環境変数から取得を試行
     try:
         api_key = os.getenv('OPENAI_API_KEY')
+        print("環境変数からAPIキーを取得しました。")
         if api_key and len(api_key.strip()) > 0:
             return api_key.strip()
     except Exception:
@@ -33,8 +35,9 @@ def get_openai_api_key():
     
     # ファイルからの読み込みを試行（ローカル環境のみ）
     try:
-        with open('openai_api_key.txt', 'r') as f:
+        with open('openai_api_key.txt', 'r') as f:            
             api_key = f.read().strip()
+            print("ファイルからAPIキーを取得しました。")
             if api_key and len(api_key) > 0:
                 return api_key
     except Exception:
