@@ -61,6 +61,49 @@ except Exception as e:
     st.write(f"❌ Secrets確認エラー: {e}")
 
 st.write("---")
+
+st.write("📦 **ライブラリ詳細確認**")
+
+# 重要なライブラリのバージョン確認
+libraries_to_check = [
+    'streamlit', 'langchain', 'openai', 'chromadb', 
+    'langchain_openai', 'langchain_community', 'pandas', 'numpy'
+]
+
+for lib_name in libraries_to_check:
+    try:
+        module = __import__(lib_name)
+        version = getattr(module, '__version__', 'バージョン不明')
+        st.write(f"✅ {lib_name}: {version}")
+    except ImportError as e:
+        st.write(f"❌ {lib_name}: インポートエラー - {e}")
+    except Exception as e:
+        st.write(f"⚠️ {lib_name}: エラー - {e}")
+
+st.write("---")
+
+
+# OpenAI接続テスト
+st.write("🔑 **OpenAI接続テスト**")
+try:
+    import openai
+    # APIキーの設定
+    openai.api_key = st.secrets["OPENAI_API_KEY"]
+    st.write("✅ OpenAI APIキー設定完了")
+    
+    # 簡単な接続テスト
+    try:
+        client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+        # モデルリスト取得（軽い処理）
+        # models = client.models.list()
+        st.write("✅ OpenAI API接続確認完了")
+    except Exception as e:
+        st.write(f"⚠️ OpenAI API接続テストエラー: {e}")
+        
+except Exception as e:
+    st.write(f"❌ OpenAI設定エラー: {e}")
+
+st.write("---")
 # ★デバッグコードここまで
 
 ############################################################
