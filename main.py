@@ -32,6 +32,36 @@ st.set_page_config(
 # ログ出力を行うためのロガーの設定
 logger = logging.getLogger(ct.LOGGER_NAME)
 
+# ★デバッグコードここから
+# main.py の初期化処理前に追加
+import sys
+import os
+
+# デバッグ情報をStreamlit画面に表示
+st.write("🔍 **デバッグ情報**")
+st.write(f"- Python version: {sys.version}")
+st.write(f"- Current directory: {os.getcwd()}")
+st.write(f"- Files in directory: {os.listdir('.')}")
+st.write(f"- Streamlit version: {st.__version__}")
+
+# 環境変数の確認
+st.write("**環境変数確認:**")
+streamlit_env = os.getenv('STREAMLIT_SHARING_MODE', 'ローカル環境')
+st.write(f"- 実行環境: {streamlit_env}")
+
+# Secretsの確認
+st.write("**Secrets確認:**")
+try:
+    secrets_check = st.secrets.get("OPENAI_API_KEY", "設定なし")
+    if secrets_check != "設定なし":
+        st.write("✅ OPENAI_API_KEY: 設定済み")
+    else:
+        st.write("❌ OPENAI_API_KEY: 未設定")
+except Exception as e:
+    st.write(f"❌ Secrets確認エラー: {e}")
+
+st.write("---")
+# ★デバッグコードここまで
 
 ############################################################
 # 3. 初期化処理
