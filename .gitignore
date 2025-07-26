@@ -184,7 +184,7 @@ faiss_index/
 *.sqlite
 
 # 社内文書データ（機密情報）
-data/
+#data/
 documents/
 private_docs/
 confidential/
