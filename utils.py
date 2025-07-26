@@ -15,29 +15,32 @@ def get_openai_api_key():
     """
     import streamlit as st
     
-    # Streamlit Secretsから取得を優先
+    # Streamlit Secretsから取得を最優先
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
-        return api_key
-    except:
+        if api_key and len(api_key.strip()) > 0:
+            return api_key.strip()
+    except Exception:
         pass
     
     # 環境変数から取得を試行
-    api_key = os.getenv('OPENAI_API_KEY')
-    if api_key:
-        return api_key
+    try:
+        api_key = os.getenv('OPENAI_API_KEY')
+        if api_key and len(api_key.strip()) > 0:
+            return api_key.strip()
+    except Exception:
+        pass
     
-    # ファイルからの読み込みを試行
+    # ファイルからの読み込みを試行（ローカル環境のみ）
     try:
         with open('openai_api_key.txt', 'r') as f:
             api_key = f.read().strip()
-            return api_key
-    except FileNotFoundError:
+            if api_key and len(api_key) > 0:
+                return api_key
+    except Exception:
         pass
     
     raise ValueError("OPENAI_API_KEY が見つかりません。Streamlit Cloud Secretsで設定してください。")
-#追加
-
 
 def build_error_message(error_type="初期化処理", additional_info=""):
     """

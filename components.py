@@ -79,12 +79,14 @@ def display_search_llm_response(llm_response):
             icon = '📝'
         elif main_file_path.endswith(('.xlsx', '.xls')):
             icon = '📊'
+        elif main_file_path.endswith('.txt'):  # ← この行を追加
+            icon = '📃'
         else:
             icon = '📁'
         
         # ページ番号が取得できた場合のみ、ページ番号を表示
         if "page" in llm_response["source_documents"][0].metadata:
-            main_page_number = int(llm_response["source_documents"][0].metadata["page"]) + 1
+            main_page_number = int(llm_response["source_documents"][0].metadata["page"]) 
             st.success(f"{main_file_path} (ページ: {main_page_number})", icon=icon)
         else:
             st.success(f"{main_file_path}", icon=icon)
@@ -117,7 +119,7 @@ def display_search_llm_response(llm_response):
             # ページ番号が取得できない場合のための分岐処理
             if "page" in document.metadata:
                 # ページ番号を取得
-                sub_page_number = int(document.metadata["page"]) + 1
+                sub_page_number = int(document.metadata["page"])
                 # 「サブドキュメントのファイルパス」と「ページ番号」の辞書を作成
                 sub_choice = {"source": sub_file_path, "page_number": sub_page_number}
             else:
@@ -141,9 +143,9 @@ def display_search_llm_response(llm_response):
 
                 if "page_number" in sub_choice:
                     # 「サブドキュメントのファイルパス」と「ページ番号」を表示
-                    sub_choice_page_number = int(sub_choice["page_number"]) + 1
+                    sub_choice_page_number = int(sub_choice["page_number"] ) 
 #                    st.info(f"{sub_choice['source']} (ページ: {sub_choice['page_number']})", icon=icon)
-                    st.info(f"{sub_choice['source']} (ページ: {sub_choice_page_number})", icon=icon)
+                    st.info(f"{sub_choice['source']} (ページ: {sub_choice_page_number + 1})", icon=icon)
 #                    st.info(f"{sub_choice['source']}", icon=icon)
                 else:
                     # 「サブドキュメントのファイルパス」を表示
@@ -162,7 +164,7 @@ def display_search_llm_response(llm_response):
         content["main_file_path"] = main_file_path
         # メインドキュメントのページ番号は、取得できた場合にのみ追加
         if "page" in llm_response["source_documents"][0].metadata:
-            content["main_page_number"] = int(main_page_number) + 1
+            content["main_page_number"] = int(main_page_number)
         # サブドキュメントの情報は、取得できた場合にのみ追加
         if sub_choices:
             content["sub_message"] = sub_message
