@@ -37,6 +37,58 @@ logger = logging.getLogger(ct.LOGGER_NAME)
 # 3. 初期化処理
 ############################################################
 try:
+    print("🔄 初期化処理を開始します...")
+    
+    # Streamlit Cloud環境の確認
+    is_cloud = 'STREAMLIT_SHARING_MODE' in os.environ or 'STREAMLIT_CLOUD' in os.environ
+    if is_cloud:
+        print("☁️ Streamlit Cloud環境で実行中")
+    else:
+        print("💻 ローカル環境で実行中")
+    
+    # 初期化実行
+    initialization_result = initialize()
+    
+    if not initialization_result:
+        st.error("🚨 初期化処理に失敗しました", icon="🚨")
+        st.markdown("""
+        ### 考えられる原因:
+        - OpenAI APIキーが設定されていない
+        - データファイルが見つからない
+        - ネットワーク接続に問題がある
+        
+        ### 対処方法:
+        1. Streamlit Cloud Secretsの設定を確認
+        2. dataフォルダにファイルが存在するか確認
+        3. ページを再読み込み
+        """)
+        st.stop()
+    else:
+        print("✅ 初期化処理完了")
+        
+except Exception as e:
+    error_message = f"初期化処理でエラーが発生しました: {str(e)}"
+    print(f"❌ {error_message}")
+    
+    st.error("🚨 システム初期化エラー", icon="🚨")
+    st.markdown(f"""
+    ### エラー詳細:
+    ```
+    {error_message}
+    ```
+    
+    ### 対処方法:
+    1. ページを再読み込みしてください
+    2. 問題が続く場合は管理者にお問い合わせください
+    """)
+    
+    # デバッグ情報表示（開発時のみ）
+    if st.checkbox("デバッグ情報を表示"):
+        st.code(traceback.format_exc())
+    
+    st.stop()
+
+try:
     # 初期化処理（「initialize.py」の「initialize」関数を実行）
     initialize()
 except Exception as e:
